@@ -248,5 +248,5 @@ Conclusion:
 This code creates an interactive web server that serves an HTML form to collect responses to a given question. The server is controlled via a GUI that allows the user to start/stop the server, set a timer for how long it should run, and submit responses before the timer expires.
 
 "guy who made this" notes Made by “EndToEndDev” 
-Total Updates (so far) : 205
-Last Update Time : 6:04 P.m. 11/12/2024
+Total Updates (so far) : 206
+Last Update Time : 8:39 P.m. 11/12/2024
