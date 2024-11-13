@@ -4,14 +4,32 @@ from tkinter import messagebox
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import threading
 import time
+import xml.etree.ElementTree as ET
+import datetime
 
 # Function to generate random port number
 def generate_random_port():
     return random.randint(8000, 8080)
 
+today = datetime.date.today()
+formated_today = today.strftime("%d")
+
 # Function to start the server
 def start_server(question, port, host="192.168.1.80", stop_event=None, status_label=None, shutdown_event=None, timer_duration=0, ip_port_label=None, submit_button=None, user_response_textbox=None):
     try:
+        test_data = {
+            "name": "Test",
+            "answer": "Test Answer",
+            "day of": f"{formated_today}"
+        }
+        root = ET.Element("output")
+
+        for key, value in test_data.items():
+            element = ET.SubElement(root, key)
+            element.text = str(value)
+        tree = ET.ElementTree(root)
+
+        tree.write("output.xml")
         # Define the HTML content that will be returned by the server
         html_code = '''
         <!DOCTYPE html>
