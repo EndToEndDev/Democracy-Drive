@@ -1,18 +1,8 @@
 <?xml version="1.0" ?>
 <output>
 	<entry>
-		<name>test_n</name>
-		<answer>test_a</answer>
-		<date>13</date>
-	</entry>
-	<entry>
-		<name>test_n</name>
-		<answer>test_a</answer>
-		<date>13</date>
-	</entry>
-	<entry>
-		<name>test_n</name>
-		<answer>test_a</answer>
+		<name>user</name>
+		<answer>hi this is a test answer typed by me on the page</answer>
 		<date>13</date>
 	</entry>
 </output>
