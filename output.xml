@@ -1,1 +1,18 @@
-<output><entry><name>test_n</name><answer>test_a</answer><date>13</date></entry></output>
+<?xml version="1.0" ?>
+<output>
+	<entry>
+		<name>test_n</name>
+		<answer>test_a</answer>
+		<date>13</date>
+	</entry>
+	<entry>
+		<name>test_n</name>
+		<answer>test_a</answer>
+		<date>13</date>
+	</entry>
+	<entry>
+		<name>test_n</name>
+		<answer>test_a</answer>
+		<date>13</date>
+	</entry>
+</output>
