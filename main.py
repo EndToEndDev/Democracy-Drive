@@ -7,6 +7,7 @@ import time
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import datetime
+from urllib.parse import parse_qs
 
 # Function to generate random port number
 def generate_random_port():
@@ -93,20 +94,22 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
                     color: #555;
                 }
 
-                textarea {
+                input, textarea {
                     width: 100%;
-                    min-height: 50px;
                     padding: 10px;
                     font-size: 16px;
                     margin-bottom: 20px;
                     border: 2px solid #ccc;
                     border-radius: 4px;
-                    transition: border-color 0.3s ease, height 0.2s ease;
+                    transition: border-color 0.3s ease;
                     resize: none;
-                    overflow-y: auto;
                 }
 
-                textarea:focus {
+                textarea {
+                    min-height: 50px;
+                }
+
+                input:focus, textarea:focus {
                     border-color: #007bff;
                     outline: none;
                 }
@@ -158,11 +161,28 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
                 }
             </style>
             <script>
-                function storeInput() {
+                function storeInput(event) {
                     let userInput = document.getElementById("userResponse").value;
-                    document.getElementById("storedValue").textContent = "You entered: " + userInput;
-                    document.getElementById("userResponse").value = "";
-                    return false;
+                    let userName = document.getElementById("userName").value;  // Get the user's name
+
+                    // Send the response and name to the server using fetch (AJAX POST request)
+                    fetch('/submit_answer', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'  // Correct content type
+                        },
+                        body: 'name=' + encodeURIComponent(userName) + '&answer=' + encodeURIComponent(userInput)  // Send both name and answer as form data
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        // Optionally handle the server's response, like updating the UI with a success message
+                        document.getElementById("storedValue").textContent = "You entered: " + userInput;
+                        document.getElementById("userResponse").value = "";  // Clear the input field
+                        document.getElementById("userName").value = "";  // Clear the name input field
+                    })
+                    .catch(error => alert("Sorry something is not working"));
+
+                    event.preventDefault();  // Prevent the form from submitting the traditional way
                 }
 
                 function autoResize() {
@@ -181,12 +201,18 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
         <body>
             <h1>Ask a Question</h1>
             <h2>{question}</h2>
-            <form onsubmit="return storeInput()">
+            <form onsubmit="return storeInput(event)">
+                <!-- Name input field -->
+                <label for="userName">Enter your name:</label>
+                <input type="text" id="userName" placeholder="Your name" required>
+
+                <!-- User response input field -->
                 <label for="userResponse">Enter your response:</label>
                 <textarea id="userResponse" placeholder="Type your answer here" required oninput="autoResize()"></textarea>
+        
                 <button type="submit" id="submitButton" { 'disabled' if shutdown_event.is_set() else '' }>Submit</button>
             </form>
-            
+
             <h2>Stored Response:</h2>
             <p id="storedValue">No response yet.</p>
 
@@ -204,12 +230,35 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(bytes(overall_html_code, "utf-8"))
-                
+    
             def do_POST(self):
+                # Read the content length and form data
+                content_length = int(self.headers['Content-Length'])  # Get the size of the POST data
+                post_data = self.rfile.read(content_length)  # Read the POST data
+
+                # Parse the form data using parse_qs to handle the URL encoding correctly
+                data = parse_qs(post_data.decode('utf-8'))
+
+                # Extract the 'answer' value from the parsed data
+                answer = data.get('answer', [None])[0]
+
+                if answer:
+                    print(f"Received answer: {answer}")
+
+                    # Prepare the data to be appended to XML
+                    new_data = {
+                        "name": "user",  # Modify as necessary
+                        "answer": answer,
+                        "date": formated_today
+                    }
+                    append_to_xml(new_data=new_data, xml_file="output.xml")  # Append the answer to XML
+
+                # Respond with the updated HTML (could also send a success message or update)
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(bytes(overall_html_code, "utf-8"))
+
 
         # Create and start the HTTP server
         server = HTTPServer((host, port), normUserHTTP)
@@ -264,15 +313,7 @@ def update_timer(timer_duration, status_label, shutdown_event, ip_port_label):
         status_label.configure(text="Server shutting down automatically...")
 
 # Function to handle the GUI interaction
-def start_gui():    
-    data = {
-        "name": "test_n",
-        "answer": "test_a",
-        "date": f"{formated_today}"
-    }
-
-    append_to_xml(new_data=data, xml_file="output.xml") 
-    
+def start_gui():        
     stop_event = threading.Event()  # Create an event to stop the server thread
     shutdown_event = threading.Event()  # Event for shutdown timer
 
