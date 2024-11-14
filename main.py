@@ -14,22 +14,32 @@ def generate_random_port():
 today = datetime.date.today()
 formated_today = today.strftime("%d")
 
+
+def append_to_xml(new_data, xml_file):
+            try:
+                # Try to parse the existing XML file
+                try:
+                    tree = ET.parse(xml_file)
+                    root = tree.getroot()
+                except FileNotFoundError:
+                    # If the file does not exist, create a new root element
+                    root = ET.Element("output")
+                    tree = ET.ElementTree(root)
+
+                # Add the new data
+                entry = ET.SubElement(root, "entry")
+                for key, value in new_data.items():
+                    element = ET.SubElement(entry, key)
+                    element.text = str(value)
+
+                # Write the updated tree back to the XML file
+                tree.write(xml_file)
+            except Exception as e:
+                print(f"Error occurred while appending to XML: {e}")
+
 # Function to start the server
 def start_server(question, port, host="192.168.1.80", stop_event=None, status_label=None, shutdown_event=None, timer_duration=0, ip_port_label=None, submit_button=None, user_response_textbox=None):
     try:
-        test_data = {
-            "name": "Test",
-            "answer": "Test Answer",
-            "day of": f"{formated_today}"
-        }
-        root = ET.Element("output")
-
-        for key, value in test_data.items():
-            element = ET.SubElement(root, key)
-            element.text = str(value)
-        tree = ET.ElementTree(root)
-
-        tree.write("output.xml")
         # Define the HTML content that will be returned by the server
         html_code = '''
         <!DOCTYPE html>
@@ -244,7 +254,15 @@ def update_timer(timer_duration, status_label, shutdown_event, ip_port_label):
         status_label.configure(text="Server shutting down automatically...")
 
 # Function to handle the GUI interaction
-def start_gui():
+def start_gui():    
+    data = {
+        "name": "test_n",
+        "answer": "test_a",
+        "date": f"{formated_today}"
+    }
+
+    append_to_xml(new_data=data, xml_file="output.xml") 
+    
     stop_event = threading.Event()  # Create an event to stop the server thread
     shutdown_event = threading.Event()  # Event for shutdown timer
 
