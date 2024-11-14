@@ -16,6 +16,7 @@ def generate_random_port():
 today = datetime.date.today()
 formated_today = today.strftime("%d")
 
+xml_lock = threading.Lock()
 
 def append_to_xml(new_data, xml_file):
             try:
@@ -206,6 +207,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
                 <label for="userName">Enter your name:</label>
                 <input type="text" id="userName" placeholder="Your name" required>
 
+            
                 <!-- User response input field -->
                 <label for="userResponse">Enter your response:</label>
                 <textarea id="userResponse" placeholder="Type your answer here" required oninput="autoResize()"></textarea>
@@ -239,19 +241,25 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
                 # Parse the form data using parse_qs to handle the URL encoding correctly
                 data = parse_qs(post_data.decode('utf-8'))
 
-                # Extract the 'answer' value from the parsed data
+                # Extract the 'answer' and 'name' values from the parsed data
                 answer = data.get('answer', [None])[0]
+                name = data.get('name', [None])[0]  # Retrieve the 'name' field
 
                 if answer:
                     print(f"Received answer: {answer}")
+                if name:
+                    print(f"Received name: {name}")
 
                     # Prepare the data to be appended to XML
                     new_data = {
-                        "name": "user",  # Modify as necessary
+                        "name": name,  # Use the name from the form data
                         "answer": answer,
-                        "date": formated_today
+                        "date": formated_today  # Ensure this is defined elsewhere in your code
                     }
-                    append_to_xml(new_data=new_data, xml_file="output.xml")  # Append the answer to XML
+
+                    # Acquire the lock before appending to XML
+                    with xml_lock:
+                        append_to_xml(new_data=new_data, xml_file="output.xml")
 
                 # Respond with the updated HTML (could also send a success message or update)
                 self.send_response(200)
