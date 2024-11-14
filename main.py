@@ -5,6 +5,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import threading
 import time
 import xml.etree.ElementTree as ET
+import xml.dom.minidom
 import datetime
 
 # Function to generate random port number
@@ -32,8 +33,17 @@ def append_to_xml(new_data, xml_file):
                     element = ET.SubElement(entry, key)
                     element.text = str(value)
 
+                # Prettify the XML and remove excess newlines
+                xml_str = ET.tostring(root, 'utf-8')
+                pretty_xml = xml.dom.minidom.parseString(xml_str).toprettyxml()
+
+                # Remove unnecessary newlines from the pretty-printed XML
+                clean_xml = "\n".join([line for line in pretty_xml.splitlines() if line.strip()])
+
                 # Write the updated tree back to the XML file
-                tree.write(xml_file)
+                with open(xml_file, "w") as f:
+                    f.write(clean_xml)
+
             except Exception as e:
                 print(f"Error occurred while appending to XML: {e}")
 
