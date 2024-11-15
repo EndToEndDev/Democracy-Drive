@@ -54,5 +54,5 @@ This Python code is a web server that integrates with a GUI using `customtkinter
 The code defines a web-based interactive system where users can answer questions within a time limit. It serves a page with a question and inputs for the user's name and response. Upon submission, the answers are saved in an XML file. The system integrates a modern GUI using `customtkinter` and allows for real-time updates to the user interface, including a countdown timer, word count display, and server status. The server is designed to be started and stopped via the GUI.
 
 "guy who made this" notes Made by “EndToEndDev” 
-Total Updates (so far) : 258
-Last Update Time : 10:16 P.m. 11/15/2024
+Total Updates (so far) : 261
+Last Update Time : 10:28 P.m. 11/15/2024
