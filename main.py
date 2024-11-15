@@ -268,10 +268,10 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
     <p id="wordCount">Word count: 0</p>
 
     <!-- U.S. Flag -->
-    <img id="usFlag" src="us_flag.png" alt="U.S. Flag">
+    <img id="usFlag" src="/us_flag.png" alt="U.S. Flag">
 
     <!-- Democracy Drive Img -->
-    <img id="dd" src="dd.png" alt="Democracy Drive">
+    <img id="dd" src="/dd.png" alt="Democracy Drive">
 </body>
 </html>
         '''
@@ -282,7 +282,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             def do_GET(self):
 
                 # Serve the US Flag image when the path is "assets/us_flag.png"
-                if self.path == "us_flag.png":
+                if self.path == "/us_flag.png":
                     try:
                         with open("us_flag.png", "rb") as f:  # Adjust path as needed
                             self.send_response(200)
@@ -296,7 +296,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
                     return
 
                 # Serve static files like dd.png
-                if self.path == "dd.png":
+                if self.path == "/dd.png":
                     try:
                         with open("dd.png", "rb") as f:  # Adjust path as needed
                             self.send_response(200)
