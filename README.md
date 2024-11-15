@@ -1,46 +1,90 @@
-Imports and Dependencies: The code imports several essential modules for creating a server, a GUI, handling XML, and managing threading. Key imports include random for generating random port numbers, customtkinter for creating a custom GUI, and http.server for building a simple HTTP server. Additionally, threading is used for multi-threading, time for managing time-related operations, xml.etree.ElementTree for XML manipulation, and datetime to work with dates.
+The two Python files you provided are for a web-based survey application with a graphical user interface (GUI) and a backend server. The main components are an HTTP server that handles requests and a GUI for interacting with the server and viewing data. Let’s break down each file, explaining how they work and their functionality.
 
-Generating a Random Port: The generate_random_port() function generates a random port number between 8000 and 8080 using the random.randint() function. This ensures that the server runs on a port that is not predefined, making it more flexible and capable of running multiple instances without conflict.
+### 1. **main.py**: The Survey Server and GUI Backend
+This file contains the primary logic for starting an HTTP server, handling user responses, and integrating with a GUI using `customtkinter` (a version of tkinter with enhanced functionality and a modern look). The functionality of `main.py` can be broken down into several key parts:
 
-Date Formatting: The today variable is initialized by calling datetime.date.today(), which returns the current date. The formated_today variable stores the formatted date as a string in the "dd" format using strftime("%d"). This is used later to store the date when the response is recorded in the XML.
+#### **Key Functions in main.py**:
 
-Threading Lock for XML Manipulation: A threading lock (xml_lock) is created using threading.Lock() to prevent multiple threads from writing to the same XML file simultaneously. This ensures that the XML file remains consistent and avoids race conditions when handling concurrent requests from different devices.
+1. **`generate_random_port()`**:
+   - This function generates a random port number between 8000 and 8080. It's used to randomly assign a port for the server to run on when starting.
 
-XML Appending Function: The append_to_xml(new_data, xml_file) function is responsible for appending new data (i.e., the user's name, answer, and date) to an XML file. It attempts to parse the XML file and append the new entry as a child of the root element. If the file doesn’t exist, it creates a new XML structure. After adding the data, it pretty-prints the XML using xml.dom.minidom and writes it back to the file.
+2. **`append_to_xml(new_data, xml_file)`**:
+   - This function handles appending data (user's name, answer, and date) to an XML file (`output.xml`). It checks if the file exists, and if not, it creates one. It also "prettifies" the XML and writes the data in a structured way.
+   - The `xml_lock` is used to ensure that no other thread interferes when writing to the file (important for thread safety).
 
-Starting the Server: The start_server() function is the core function that initializes and runs the HTTP server. It constructs the HTML response for the server and defines the request handler class (normUserHTTP). The function also handles the setup of the server and begins handling incoming HTTP requests. It starts a countdown timer thread and checks for shutdown events.
+3. **`start_server()`**:
+   - This is the core function where the HTTP server is started. It takes parameters like the question to be asked, the port, and the timer duration.
+   - The server serves an HTML page containing a form for users to submit their name and answer. The server then handles GET and POST requests.
+     - **GET** request: Returns the HTML page with the question.
+     - **POST** request: Collects the user's response and name, then appends the data to the XML file.
+   - The server is started using the `HTTPServer` class from the `http.server` module and runs in a separate thread to allow other parts of the program (like the GUI) to function simultaneously.
+   - A countdown timer is also started in a separate thread. When the timer expires, it triggers a shutdown of the server.
 
-HTML Content Definition: The HTML content that the server serves is defined in the html_code variable. This code provides the structure for the webpage, including form inputs for the user to enter their name and response. It also includes embedded JavaScript functions for handling the form submission and dynamically resizing the input field as the user types.
+4. **`update_timer()`**:
+   - This function updates the countdown timer displayed on the web page and triggers the server shutdown when the timer reaches zero.
 
-JavaScript in HTML: The JavaScript embedded in the HTML is responsible for handling the form submission, collecting the name and response, and sending them to the server using an AJAX request (fetch()). It also automatically resizes the response textarea based on the content and updates a timer that shows the remaining time before the server shuts down.
+5. **`start_gui()`**:
+   - This function sets up the GUI for the user to interact with. It uses `customtkinter` for a modern appearance.
+   - The user can input a question, host, and timer duration, then start the server. It also provides a button to stop the server.
+   - The GUI is event-driven, with functions defined for starting and stopping the server based on button clicks.
+   - It initializes the server with a random port, and when the server is started, it disables the "Start Server" button and enables the "Stop Server" button.
 
-HTTP Request Handler Class: The normUserHTTP class inherits from BaseHTTPRequestHandler and defines two methods: do_GET() and do_POST(). do_GET() serves the HTML page to the client, while do_POST() processes the form submission. The form data is parsed, and the append_to_xml() function is called to store the name, answer, and date in the XML file. The server then responds with the updated HTML content.
+6. **Event Handling**:
+   - The GUI uses `tkinter` events and the `threading.Event()` class to control the server’s lifecycle. When the "Stop Server" button is clicked, the server thread is stopped, and the UI is updated accordingly.
 
-Server Setup: The server is created using the HTTPServer() constructor, which binds the server to the specified host and port. The server then starts handling HTTP requests in a loop until the stop_event is set, which signals the server to stop. The server is run on a separate thread to allow non-blocking execution in the GUI.
+#### **HTML/JavaScript for Web Page**:
+- The server generates an HTML form for the user to submit their name and answer.
+- It also includes JavaScript for:
+  - Resizing the textarea dynamically.
+  - Counting the words in the user’s input.
+  - Submitting the data to the server using a `fetch()` request (AJAX).
+  - Displaying a countdown timer and updating the UI with the remaining time.
 
-Timer Management: The update_timer() function is a separate thread that manages the countdown timer. It decrements the timer each second and updates the status label in the GUI. When the timer reaches zero, it triggers the shutdown_event, signaling the server to shut down automatically.
+#### **Server Details**:
+- The server listens on the specified host (`192.168.1.80` by default) and a random port.
+- The server dynamically updates the form with the question, a countdown timer, and the server's IP and port.
+- The data from the form is sent as a POST request and appended to an XML file (`output.xml`) for later review.
 
-GUI Setup: The start_gui() function initializes the GUI using the customtkinter library, which provides a modern and customizable interface. The window is set to dark mode, and various GUI elements such as labels, entry fields, and buttons are created and packed into the window.
+### 2. **xml_reader.py**: XML Data Reader and Display
 
-Start and Stop Server Buttons: The GUI includes "Start Server" and "Stop Server" buttons. When the user clicks the "Start Server" button, the server is started in a new thread, and the IP address and port are displayed. The "Stop Server" button allows the user to stop the server manually by setting the stop_event. The "Stop" button is initially disabled and only enabled once the server is running.
+This file is responsible for reading the `output.xml` file, sorting the responses, and displaying them in a GUI. The GUI allows the user to view responses in a scrollable window with options to toggle the display style of each response.
 
-Question and Timer Input: The GUI provides fields where the user can enter the question for the server to display and specify the duration of the timer in seconds. These fields are validated before starting the server. The question_entry, timer_entry, and host_entry fields allow the user to customize the server’s behavior.
+#### **Key Functions in xml_reader.py**:
 
-Handling Start Button Click: The on_start_button_click() function is called when the user clicks the "Start Server" button. It retrieves the question, host, and timer duration from the GUI, validates the inputs, generates a random port, and starts the server on a separate thread. It also updates the GUI to display the server’s IP and port.
+1. **`read_and_sort_xml(file_path)`**:
+   - This function reads the `output.xml` file, parses it, and extracts the entries into a list of dictionaries. Each dictionary contains the `name`, `answer`, and `date` of a user's submission.
+   - The entries are then sorted by the `date` field, and the sorted list is returned.
 
-Handling Stop Button Click: The on_stop_button_click() function is invoked when the user clicks the "Stop Server" button. It sets the stop_event, signaling the server to stop. The function also updates the GUI to reflect the server's stopped status and disables the "Stop Server" button while enabling the "Start Server" button again.
+2. **`create_gui(sorted_entries)`**:
+   - This function creates a GUI using `tkinter` to display the sorted XML entries. It creates a full-screen window and a scrollable canvas to show the responses.
+   - Each response is displayed in a frame, which includes:
+     - Name: A label showing the name of the person who submitted the response.
+     - Answer: A label showing the answer.
+     - Date: A label showing the date of the submission.
+     - Word Count: A label showing the number of words in the answer.
+     - A checkbox that, when checked, applies a strikethrough effect to the name (using a toggle).
+   - The scrollable area ensures that all the responses can be viewed even if there are many submissions.
 
-XML Locking Mechanism: The code uses the xml_lock to ensure that the append_to_xml() function is thread-safe. This lock prevents multiple threads from writing to the XML file simultaneously, ensuring that the data in the file remains consistent even if multiple devices send requests at the same time.
+3. **`toggle_name_style()`**:
+   - This function toggles the style of the name label (strikethrough, italic, grey) when the checkbox is checked. It allows for a visual cue to mark names (e.g., to indicate that the person’s response has been reviewed or acknowledged).
 
-Error Handling: Error handling is implemented throughout the code, especially within the server and XML-related functions. In case of any exception, error messages are printed to the console, and the messagebox.showerror() function is used to alert the user if the server fails to start.
+4. **`close_window()`**:
+   - This function closes the GUI window when the "Close" button is clicked.
 
-Server Shutdown on Timer Expiry: The server automatically shuts down after the timer expires. The update_timer() function monitors the countdown, and when the timer reaches zero, it triggers the shutdown_event. This causes the server to gracefully shut down, and the appropriate status message is shown in the GUI.
+5. **`main()`**:
+   - The main function calls `read_and_sort_xml()` to get the sorted entries from the XML file and then passes them to `create_gui()` to display them.
 
-Main GUI Loop: The root.mainloop() function starts the Tkinter event loop, which listens for user interactions (button clicks, form submissions, etc.). This keeps the GUI responsive while the server is running and allows for real-time updates to the server’s status and other elements. The GUI provides an interactive way to control the server’s operation, making it user-friendly and efficient.
+### **How the Two Files Work Together**:
+- **main.py** handles the survey logic, starting the server, accepting user responses, and storing them in an XML file (`output.xml`).
+- **xml_reader.py** reads the XML file and displays the sorted responses in a GUI. The user can review the responses, check or uncheck names, and close the window when done.
 
-In summary, this code provides a web server that collects user responses to a daily question, stores them in an XML file, and provides a timer that automatically shuts down the server. The entire process is managed via a graphical user interface (GUI), allowing for easy configuration and control of the server.
+### **Overall Workflow**:
+1. The user opens the GUI created by `main.py` and starts the server by entering a question, timer, and host details. The server is then started, and users can access it through a web browser to submit their answers.
+2. When users submit their responses, the server stores the data in `output.xml`.
+3. Once responses are collected, the user can run `xml_reader.py` to view the sorted responses, toggle the display of names, and see the word count for each answer.
 
+This combination of HTTP server functionality with a rich GUI for viewing data makes the application a simple, interactive survey system that collects responses and displays them in an organized way.
 
 "guy who made this" notes Made by “EndToEndDev” 
-Total Updates (so far) : 210
-Last Update Time : 6:41 A.m. 11/14/2024
+Total Updates (so far) : 254
+Last Update Time : 5:32 P.m. 11/14/2024
