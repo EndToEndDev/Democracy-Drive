@@ -54,174 +54,191 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
     try:
         # Define the HTML content that will be returned by the server
         html_code = '''
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Democracy Drive</title>
-            <style>
-                body {
-                    font-family: Arial, sans-serif;
-                    background-color: #f4f4f9;
-                    color: #333;
-                    margin: 0;
-                    padding: 0;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    height: 100vh;
-                    flex-direction: column;
-                }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Democracy Drive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
 
-                h1 {
-                    color: #333;
-                }
+        h1 {
+            color: #333;
+        }
 
-                form {
-                    background-color: #fff;
-                    padding: 20px;
-                    border-radius: 8px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                    width: 100%;
-                    max-width: 400px;
-                    text-align: center;
-                }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
 
-                label {
-                    font-size: 16px;
-                    margin-bottom: 8px;
-                    display: block;
-                    color: #555;
-                }
+        label {
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: block;
+            color: #555;
+        }
 
-                input, textarea {
-                    width: 100%;
-                    padding: 10px;
-                    font-size: 16px;
-                    margin-bottom: 20px;
-                    border: 2px solid #ccc;
-                    border-radius: 4px;
-                    transition: border-color 0.3s ease;
-                    resize: none;
-                }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+            resize: none;
+        }
 
-                textarea {
-                    min-height: 50px;
-                }
+        textarea {
+            min-height: 50px;
+        }
 
-                input:focus, textarea:focus {
-                    border-color: #007bff;
-                    outline: none;
-                }
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
 
-                button {
-                    background-color: #007bff;
-                    color: #fff;
-                    border: none;
-                    padding: 10px 20px;
-                    font-size: 16px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    transition: background-color 0.3s ease;
-                }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
-                button:hover {
-                    background-color: #0056b3;
-                }
+        button:hover {
+            background-color: #0056b3;
+        }
 
-                h2 {
-                    color: #333;
-                    margin-top: 30px;
-                }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+        }
 
-                #storedValue {
-                    font-size: 18px;
-                    color: #555;
-                    background-color: #e9ecef;
-                    padding: 10px;
-                    border-radius: 4px;
-                    width: 100%;
-                    max-width: 400px;
-                    margin-top: 10px;
-                    text-align: center;
-                }
+        #storedValue {
+            font-size: 18px;
+            color: #555;
+            background-color: #e9ecef;
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
+            text-align: center;
+        }
 
-                #timer {
-                    font-size: 18px;
-                    color: #f44336;
-                    margin-top: 30px;
-                    font-weight: bold;
-                }
+        #timer {
+            font-size: 18px;
+            color: #f44336;
+            margin-top: 30px;
+            font-weight: bold;
+        }
 
-                #ipPort {
-                    font-size: 16px;
-                    color: #007bff;
-                    margin-top: 10px;
-                    font-weight: normal;
-                }
-            </style>
-            <script>
-                function storeInput(event) {
-                    let userInput = document.getElementById("userResponse").value;
-                    let userName = document.getElementById("userName").value;  // Get the user's name
+        #ipPort {
+            font-size: 16px;
+            color: #007bff;
+            margin-top: 10px;
+            font-weight: normal;
+        }
 
-                    // Send the response and name to the server using fetch (AJAX POST request)
-                    fetch('/submit_answer', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'  // Correct content type
-                        },
-                        body: 'name=' + encodeURIComponent(userName) + '&answer=' + encodeURIComponent(userInput)  // Send both name and answer as form data
-                    })
-                    .then(response => response.text())
-                    .then(data => {
-                        // Optionally handle the server's response, like updating the UI with a success message
-                        document.getElementById("storedValue").textContent = "You entered: " + userInput;
-                        document.getElementById("userResponse").value = "";  // Clear the input field
-                        document.getElementById("userName").value = "";  // Clear the name input field
-                    })
-                    .catch(error => alert("Sorry something is not working"));
+        #wordCount {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function storeInput(event) {
+            let userInput = document.getElementById("userResponse").value;
+            let userName = document.getElementById("userName").value;  // Get the user's name
 
-                    event.preventDefault();  // Prevent the form from submitting the traditional way
-                }
+            // Send the response and name to the server using fetch (AJAX POST request)
+            fetch('/submit_answer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'  // Correct content type
+                },
+                body: 'name=' + encodeURIComponent(userName) + '&answer=' + encodeURIComponent(userInput)  // Send both name and answer as form data
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Optionally handle the server's response, like updating the UI with a success message
+                document.getElementById("storedValue").textContent = "You entered: " + userInput;
+                document.getElementById("userResponse").value = "";  // Clear the input field
+                document.getElementById("userName").value = "";  // Clear the name input field
+            })
+            .catch(error => alert("Sorry something is not working"));
 
-                function autoResize() {
-                    const textarea = document.getElementById('userResponse');
-                    textarea.style.height = 'auto';
-                    textarea.style.height = (textarea.scrollHeight) + 'px';
-                }
+            event.preventDefault();  // Prevent the form from submitting the traditional way
+        }
 
-                function updateTimer(remainingTime) {
-                    document.getElementById("timer").textContent = "Time remaining: " + remainingTime + " seconds";
-                }
-            </script>
+        function autoResize() {
+            const textarea = document.getElementById('userResponse');
+            textarea.style.height = 'auto';
+            textarea.style.height = (textarea.scrollHeight) + 'px';
+        }
+
+        function updateTimer(remainingTime) {
+            document.getElementById("timer").textContent = "Time remaining: " + remainingTime + " seconds";
+        }
+
+        // Function to count words in the textarea and update word count
+        function updateWordCount() {
+            const textarea = document.getElementById('userResponse');
+            const text = textarea.value.trim();  // Get the text value
+            const words = text.split(/\s+/).filter(Boolean);  // Split by spaces and filter out empty words
+            const wordCount = words.length;  // Count the words
+            document.getElementById('wordCount').textContent = `Word count: ${wordCount}`;  // Update word count display
+        }
+    </script>
         '''
         html_code_2 = f'''
-        </head>
-        <body>
-            <h1>Ask a Question</h1>
-            <h2>{question}</h2>
-            <form onsubmit="return storeInput(event)">
-                <!-- Name input field -->
-                <label for="userName">Enter your name:</label>
-                <input type="text" id="userName" placeholder="Your name" required>
+</head>
+<body>
+    <h1>Ask a Question</h1>
+    <h2>{question}</h2>
+    <form onsubmit="return storeInput(event)">
+        <!-- Name input field -->
+        <label for="userName">Enter your name:</label>
+        <input type="text" id="userName" placeholder="Your name" required>
 
-            
-                <!-- User response input field -->
-                <label for="userResponse">Enter your response:</label>
-                <textarea id="userResponse" placeholder="Type your answer here" required oninput="autoResize()"></textarea>
-        
-                <button type="submit" id="submitButton" { 'disabled' if shutdown_event.is_set() else '' }>Submit</button>
-            </form>
+        <!-- User response input field -->
+        <label for="userResponse">Enter your response:</label>
+        <textarea id="userResponse" placeholder="Type your answer here" required oninput="autoResize(); updateWordCount()"></textarea>
 
-            <h2>Stored Response:</h2>
-            <p id="storedValue">No response yet.</p>
+        <button type="submit" id="submitButton" { 'disabled' if shutdown_event.is_set() else '' }>Submit</button>
+    </form>
 
-            <p id="timer">Time remaining: {timer_duration} seconds</p>
-            <p id="ipPort">Server running at {host}:{port}</p>
-        </body>
-        </html>
+    <h2>Stored Response:</h2>
+    <p id="storedValue">No response yet.</p>
+
+    <p id="timer">Time remaining: {timer_duration} seconds</p>
+    <p id="ipPort">Server running at {host}:{port}</p>
+
+    <!-- Word count display -->
+    <p id="wordCount">Word count: 0</p>
+</body>
+</html>
         '''
 
         overall_html_code = html_code + html_code_2
