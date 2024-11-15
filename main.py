@@ -8,6 +8,8 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import datetime
 from urllib.parse import parse_qs
+from DATA_DESTROYER import file
+from xml_reader import code
 
 # Function to generate random port number
 def generate_random_port():
@@ -17,6 +19,11 @@ today = datetime.date.today()
 formated_today = today.strftime("%d")
 
 xml_lock = threading.Lock()
+
+def open_destroy_window():
+    file()  # Call the file function to open the destroy window
+def open_read_window():
+    code()  # Call the file function to open the read window
 
 def append_to_xml(new_data, xml_file):
             try:
@@ -350,7 +357,7 @@ def start_gui():
     ctk.set_appearance_mode("dark")
 
     # Set window size and layout
-    root.geometry("400x475")
+    root.geometry("400x525")
     root.resizable(False, False)
 
     # Create a label and entry for the question
@@ -379,6 +386,14 @@ def start_gui():
     stop_button = ctk.CTkButton(root, text="Stop Server", command=lambda: on_stop_button_click(stop_event, start_button, stop_button, status_label), state=ctk.DISABLED)
     stop_button.pack(pady=10)
 
+    # Button to trigger the file function (which opens the destroy window)
+    destroy_button = ctk.CTkButton(root, text="Open Destroy Window", command=lambda: open_destroy_window())
+    destroy_button.pack(pady=20)
+
+    # Button to trigger the file function (which opens the destroy window)
+#    read_button = ctk.CTkButton(root, text="Open Read Window", command=lambda: open_read_window())
+#    read_button.pack(pady=20)
+
     # Label to display server status
     status_label = ctk.CTkLabel(root, text="Server status: Not running", anchor="w", wraplength=350)
     status_label.pack(pady=10, padx=20, fill="x", anchor="w")
@@ -392,6 +407,8 @@ def start_gui():
     user_response_textbox.pack(pady=5)
     submit_button = ctk.CTkButton(root, text="Submit", state=ctk.DISABLED)
     submit_button.pack(pady=10)
+
+
 
     # Function to handle the start button click
     def on_start_button_click(question_entry, host_entry, timer_entry, start_button, stop_button, status_label, stop_event, shutdown_event, submit_button, user_response_textbox):
