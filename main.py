@@ -23,6 +23,7 @@ xml_lock = threading.Lock()
 def open_destroy_window():
     file()  # Call the file function to open the destroy window
 def open_read_window():
+    print("Testing Read Button")
     code()  # Call the file function to open the read window
 
 def append_to_xml(new_data, xml_file):
@@ -357,7 +358,7 @@ def start_gui():
     ctk.set_appearance_mode("dark")
 
     # Set window size and layout
-    root.geometry("400x525")
+    root.geometry("400x600")
     root.resizable(False, False)
 
     # Create a label and entry for the question
@@ -391,8 +392,8 @@ def start_gui():
     destroy_button.pack(pady=20)
 
     # Button to trigger the file function (which opens the destroy window)
-#    read_button = ctk.CTkButton(root, text="Open Read Window", command=lambda: open_read_window())
-#    read_button.pack(pady=20)
+    read_button = ctk.CTkButton(root, text="Open Read Window", command=lambda: open_read_window())
+    read_button.pack(pady=20)
 
     # Label to display server status
     status_label = ctk.CTkLabel(root, text="Server status: Not running", anchor="w", wraplength=350)
