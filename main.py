@@ -68,7 +68,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Democracy Drive</title>
-    <link rel="icon" type="image/png" href="assets/dd.png">
+    <link rel="icon" type="image/png" href="dd.png">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -268,10 +268,10 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
     <p id="wordCount">Word count: 0</p>
 
     <!-- U.S. Flag -->
-    <img id="usFlag" src="assets/us_flag.png" alt="U.S. Flag">
+    <img id="usFlag" src="us_flag.png" alt="U.S. Flag">
 
     <!-- Democracy Drive Img -->
-    <img id="dd" src="assets/dd.png" alt="Democracy Drive">
+    <img id="dd" src="dd.png" alt="Democracy Drive">
 </body>
 </html>
         '''
@@ -282,9 +282,9 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             def do_GET(self):
 
                 # Serve the US Flag image when the path is "assets/us_flag.png"
-                if self.path == "/assets/us_flag.png":
+                if self.path == "us_flag.png":
                     try:
-                        with open("assets/us_flag.png", "rb") as f:  # Adjust path as needed
+                        with open("us_flag.png", "rb") as f:  # Adjust path as needed
                             self.send_response(200)
                             self.send_header("Content-Type", "image/png")
                             self.end_headers()
@@ -296,9 +296,9 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
                     return
 
                 # Serve static files like dd.png
-                if self.path == "/assets/dd.png":
+                if self.path == "dd.png":
                     try:
-                        with open("assets/dd.png", "rb") as f:  # Adjust path as needed
+                        with open("dd.png", "rb") as f:  # Adjust path as needed
                             self.send_response(200)
                             self.send_header("Content-Type", "image/png")
                             self.end_headers()
