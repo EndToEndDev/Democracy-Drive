@@ -68,6 +68,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Democracy Drive</title>
+    <link rel="icon" type="image/png" href="dd.png">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -94,6 +95,26 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             width: 100%;
             max-width: 400px;
             text-align: center;
+        }
+
+        #usFlag {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;  /* Adjust the flag size */
+            height: auto;
+            z-index: 9999;  /* Ensure it's always on top */
+        }
+
+        #dd {
+            position: fixed;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;  /* Adjust the Democracy Drive img size */
+            height: auto;
+            z-index: 9999;  /* Ensure it's always on top */
         }
 
         label {
@@ -245,6 +266,12 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
 
     <!-- Word count display -->
     <p id="wordCount">Word count: 0</p>
+
+    <!-- U.S. Flag -->
+    <img id="usFlag" src="us_flag.png" alt="U.S. Flag">
+
+    <!-- Democracy Drive Img -->
+    <img id="dd" src="dd.png" alt="Democracy Drive">
 </body>
 </html>
         '''
@@ -253,6 +280,35 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
 
         class normUserHTTP(BaseHTTPRequestHandler):
             def do_GET(self):
+
+                # Serve the US Flag image when the path is "/us_flag.png"
+                if self.path == "/us_flag.png":
+                    try:
+                        with open("us_flag.png", "rb") as f:  # Adjust path as needed
+                            self.send_response(200)
+                            self.send_header("Content-Type", "image/png")
+                            self.end_headers()
+                            self.wfile.write(f.read())
+                    except FileNotFoundError:
+                        self.send_response(404)
+                        self.end_headers()
+                        self.wfile.write(b"404 Not Found")
+                    return
+
+                # Serve static files like dd.png
+                if self.path == "/dd.png":
+                    try:
+                        with open("dd.png", "rb") as f:  # Adjust path as needed
+                            self.send_response(200)
+                            self.send_header("Content-Type", "image/png")
+                            self.end_headers()
+                            self.wfile.write(f.read())
+                    except FileNotFoundError:
+                        self.send_response(404)
+                        self.end_headers()
+                        self.wfile.write(b"404 Not Found")
+                    return
+
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
