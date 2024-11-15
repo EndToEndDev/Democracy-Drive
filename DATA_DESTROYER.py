@@ -23,7 +23,7 @@ def file():
 
     # Creating the GUI using Toplevel window (avoid mainloop conflict)
     destroy_window = ctk.CTkToplevel()  # A new window, separate from the main root window
-    destroy_window.geometry("250x250")
+    destroy_window.geometry("200x200")
     destroy_window.title("Destroy File")
 
     # Add a button that destroys the output.xml file when clicked
