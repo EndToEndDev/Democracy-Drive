@@ -86,5 +86,5 @@ This file is responsible for reading the `output.xml` file, sorting the response
 This combination of HTTP server functionality with a rich GUI for viewing data makes the application a simple, interactive survey system that collects responses and displays them in an organized way.
 
 "guy who made this" notes Made by “EndToEndDev” 
-Total Updates (so far) : 255
-Last Update Time : 5:32 P.m. 11/14/2024
+Total Updates (so far) : 256
+Last Update Time : 8:50 P.m. 11/15/2024
