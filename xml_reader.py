@@ -1,6 +1,7 @@
 import xml.etree.ElementTree as ET
 import customtkinter as ctk
 from tkinter import messagebox
+from threading import *
 import threading
 
 def code():
@@ -32,6 +33,7 @@ def code():
         sorted_window = ctk.CTkToplevel()  # A new window
         sorted_window.title("Sorted XML Viewer")
         sorted_window.geometry("1750x700")
+
         # Set the window to full-screen
         sorted_window.attributes('-fullscreen', False)
 
@@ -98,14 +100,6 @@ def code():
             word_count_label = ctk.CTkLabel(entry_frame, text=f"Words: {word_count}", anchor="w")
             word_count_label.pack(side="right", padx=10)
 
-        # Function to close the window when the button is clicked
-        def close_window():
-            sorted_window.quit()  # This will close the window when the button is clicked
-
-        # Create a button to close the window and place it at the bottom
-        close_button = ctk.CTkButton(sorted_window, text="Close", command=close_window)
-        close_button.pack(side="bottom", pady=20)
-
     # Main function to run the program
     def main():
         file_path = "output.xml"  # Path to the XML file
@@ -119,6 +113,3 @@ def code():
 
     # Run the main function in a separate thread
     threading.Thread(target=run_in_thread).start()
-
-# Run the code function
-code()
