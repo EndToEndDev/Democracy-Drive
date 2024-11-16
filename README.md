@@ -9,7 +9,7 @@ This Python code is a web server that integrates with a GUI using `customtkinter
    - For Windows - open cmd
    - Do "ipconfig"
    - Find ipv4 address :        "YOUR IP ADDRESS"
-   - Remeber this for later.
+   - Remember this for later.
    - Open main.py in any text editor.
    - Locate the start_server(port, host, etc...) line.
    - Change host="192.168.1.80" to host="YOUR IP ADDRESS"
