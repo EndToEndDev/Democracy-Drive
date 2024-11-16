@@ -7,24 +7,24 @@ This Python code is a web server that integrates with a GUI using `customtkinter
    - Download the latest release and extract it in any folder you want it to live.
    - If you don't want to type your ip in everytime follow these steps.
    - For Windows - open cmd
-   - Do "ipconfig"
-   - Find ipv4 address :        "YOUR IP ADDRESS"
+   - Do `ipconfig`
+   - Find `ipv4 address :        "YOUR IP ADDRESS"`
    - Remember this for later.
    - Open main.py in any text editor.
    - Locate the start_server(port, host, etc...) line.
-   - Change host="192.168.1.80" to host="YOUR IP ADDRESS"
-   - Then locate line 427 or "host_label = ctk.CTkLabel(root, text="Enter host (optional, default: 192.168.1.80):")"
-   - Change this into "host_label = ctk.CTkLabel(root, text="Enter host (optional, default: YOUR IP ADDRESS THAT YOU PUT IN HOST):")"
+   - Change `host="192.168.1.80"` to `host="YOUR IP ADDRESS"`
+   - Then locate line 427 or `host_label = ctk.CTkLabel(root, text="Enter host (optional, default: 192.168.1.80):")`
+   - Change this into `host_label = ctk.CTkLabel(root, text="Enter host (optional, default: YOUR IP ADDRESS THAT YOU PUT IN HOST):")`
    - Important to mention put your actual ip address not "YOUR IP ADDRESS" because if you do it won't work.
    - That's it for setting up your Ip
    - Navigate to your folder for this directory in command prompt
-   - Do "pip install customtkinter"
+   - Do `pip install customtkinter`
    - That's it for setup
 
 ### 2. **RUNNING main.py**
    - MUST BE ADMIN
    - In admin terminal (aka you ran cmd as admin) Go to your folder that has main.py (aka where you extracted it)
-   - And run main.py as adminstator by doning "python3 main.py"
+   - And run main.py as adminstator by doning `python3 main.py`
    - It should run perfectly if you correctly modified the code as you should have in "IMPORTANT INFORMATION FOR DOWNLOAD"
 
 ### 3. **Imports and Dependencies**
