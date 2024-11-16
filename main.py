@@ -1,3 +1,7 @@
+import sys
+import os
+import ctypes
+import platform
 import random
 import customtkinter as ctk
 from tkinter import messagebox
@@ -19,6 +23,50 @@ today = datetime.date.today()
 formated_today = today.strftime("%d")
 
 xml_lock = threading.Lock()
+
+# Check if the script requires admin privileges
+def is_admin_windows():
+    """Check if the script is being run as an administrator on Windows."""
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin() != 0
+    except:
+        return False
+
+def run_as_admin_windows():
+    """Re-launch the script with administrator privileges on Windows."""
+    if sys.argv[-1] != 'admin':
+        script = sys.argv[0]
+        params = ' '.join(sys.argv[1:] + ['admin'])
+        ctypes.windll.shell32.ShellExecuteW(None, 'runas', script, params, None, 1)
+        start_gui()
+        sys.exit()
+
+def check_root_unix():
+    """Check if the script is being run as root on Unix-based systems."""
+    return os.geteuid() == 0
+
+def run_as_root_unix():
+    """Re-launch the script with root privileges on Unix-based systems."""
+    if not check_root_unix():
+        print("This script needs to be run as root!")
+        print("Re-running with sudo...")
+        os.execvp('sudo', ['sudo', 'python3'] + sys.argv)
+        start_gui()
+        sys.exit()
+
+def ensure_admin_privileges():
+    """Ensure the script is run with administrator/root privileges."""
+    os_type = platform.system()
+
+    if os_type == "Windows":
+        if not is_admin_windows():
+            run_as_admin_windows()
+    elif os_type in ["Linux", "Darwin"]:  # Darwin is macOS
+        if not check_root_unix():
+            run_as_root_unix()
+    else:
+        print(f"Unsupported OS: {os_type}")
+        sys.exit(1)
 
 def open_destroy_window():
     file()  # Call the file function to open the destroy window
@@ -504,5 +552,6 @@ def start_gui():
     root.mainloop()
 
 if __name__ == "__main__":
+    ensure_admin_privileges()
     start_gui()
 #test changes
