@@ -23,9 +23,8 @@ This Python code is a web server that integrates with a GUI using `customtkinter
 
 ### 2. **RUNNING main.py**
    - MUST BE ADMIN
-   - In admin terminal (aka you ran cmd as admin) Go to your folder that has main.py (aka where you extracted it)
-   - And run main.py as adminstator by doing `python3 main.py`
-   - It should run perfectly if you correctly modified the code as you should have in "IMPORTANT INFORMATION FOR DOWNLOAD"
+   - And run main.py by doing `python3 main.py` it will check if you are admin.
+   - It should run perfectly if you correctly modified the code as you should have in "IMPORTANT INFORMATION FOR DOWNLOAD".
 
 ### 3. **Imports and Dependencies**
    - The script imports a variety of libraries such as `random`, `customtkinter`, `http.server`, `xml.etree.ElementTree`, and others.
