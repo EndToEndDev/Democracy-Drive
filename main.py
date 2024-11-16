@@ -12,8 +12,8 @@ import xml.etree.ElementTree as ET
 import xml.dom.minidom
 import datetime
 from urllib.parse import parse_qs
-from DATA_DESTROYER import file
-from xml_reader import code
+from sub_scripts.DATA_DESTROYER import file
+from sub_scripts.xml_reader import code
 
 # Function to generate random port number
 def generate_random_port():
