@@ -293,10 +293,10 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
     <p id="wordCount">Word count: 0</p>
 
     <!-- U.S. Flag -->
-    <img id="usFlag" src="/assets/us_flag.png" alt="U.S. Flag">
+    <!-- <img id="usFlag" src="/assets/us_flag.png" alt="U.S. Flag"> -->
 
     <!-- Democracy Drive Img -->
-    <img id="dd" src="/assets/dd.png" alt="Democracy Drive">
+    <!-- <img id="dd" src="/assets/dd.png" alt="Democracy Drive"> -->
 </body>
 </html>
         '''
