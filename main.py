@@ -1,3 +1,5 @@
+# Democracy Drive
+# By EndToEndDev
 import sys
 import os
 import ctypes
@@ -530,4 +532,5 @@ def start_gui():
 
 if __name__ == "__main__":
     start_gui()
+# I'm going to pause this project for a while and work on other things
 #test changes
