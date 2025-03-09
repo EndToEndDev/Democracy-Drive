@@ -284,9 +284,33 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             const wordCount = words.length;  // Count the words
             document.getElementById('wordCount').textContent = `Word count: ${wordCount}`;  // Update word count display
         }
+    window.addEventListener("beforeunload", function (event) {
+        event.preventDefault(); 
+        event.returnValue = ""; // Required for modern browsers
+    });
+    document.addEventListener("keydown", function (event) {
+    if (event.key === "F5" || (event.ctrlKey && event.key === "r")) {
+        event.preventDefault();
+    }
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+    let lastVisit = localStorage.getItem("lastVisit");
+    let today = new Date().toDateString();
+
+    if (lastVisit === today) {
+        document.body.innerHTML = "<h1>Access Denied: You can only visit once per day.</h1>";
+    } else {
+        localStorage.setItem("lastVisit", today); // Store the current date
+    }
+});
+
+
+
     window.onload = function() {
     '''
         html_code_2 = f'''
+    
+    
     let startTime = Math.floor(Date.now() / 1000);
     let duration = {duration}; // Insert duration dynamically from Python
     let endTime = startTime + duration;
@@ -309,6 +333,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             document.getElementById('timer').textContent = "Session Over";
             disableButton();
             clearInterval(timerInterval);
+            alert("Times Up")
             return;
         }'''
         html_code_4 = '''
@@ -325,7 +350,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
         html_code_5 = f'''
 </head>
 <body>
-    <h1>Ask a Question</h1>
+    <h1><b>Answer The Question</b></h1>
     <h2>{question}</h2>
     <form onsubmit="return storeInput(event)">
         <!-- Name input field -->
