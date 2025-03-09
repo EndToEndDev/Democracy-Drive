@@ -154,6 +154,21 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             color: #555;
         }
 
+        #submitButton {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #28a745; /* Green when enabled */
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        }
+
+        #submitButton:disabled {
+            background-color: #a0a0a0; /* Gray when disabled */
+            cursor: not-allowed;
+        }
+
         input, textarea {
             width: 100%;
             padding: 10px;
@@ -269,38 +284,43 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             const wordCount = words.length;  // Count the words
             document.getElementById('wordCount').textContent = `Word count: ${wordCount}`;  // Update word count display
         }
-        document.addEventListener("DOMContentLoaded", function() {
-
+    window.onload = function() {
     '''
         html_code_2 = f'''
-    let startTime = Math.floor(Date.now() / 1000);  // Start time in seconds
-    let duration = {duration};  // Example duration, in seconds (you can update this with the correct value)
+    let startTime = Math.floor(Date.now() / 1000);
+    let duration = {duration}; // Insert duration dynamically from Python
+    let endTime = startTime + duration;
     let submitBtn = document.getElementById('submitButton');
-
-    let endTime = startTime + duration;  // Calculate the end time
     '''
         html_code_3 = '''
+    function disableButton() {
+        submitBtn.disabled = true;
+    }
+
+    if (duration <= 0) {
+        disableButton();
+    }
+    
     function updateTimer() {
         let currentTime = Math.floor(Date.now() / 1000);  // Current time in seconds
         let remaining = endTime - currentTime;
 
         if (remaining <= 0) {
             document.getElementById('timer').textContent = "Session Over";
-            submitBtn.disabled = true;  // Disable button when session ends
-            alert("TIMES UP")
-            clearInterval(timerInterval);  // Stop the interval
+            disableButton();
+            clearInterval(timerInterval);
             return;
         }'''
         html_code_4 = '''
-        document.getElementById('timer').textContent = `Time left: ${remaining}s`;
+        document.getElementById('timer').textContent = `Time left: ${remaining} seconds`;
     }
 
     // Initial update and set interval to update every second
     updateTimer();
     let timerInterval = setInterval(updateTimer, 1000);
-});
+};
 
-    </script>
+</script>
         '''
         html_code_5 = f'''
 </head>
