@@ -18,6 +18,8 @@ from urllib.parse import parse_qs
 from sub_scripts.DATA_DESTROYER import file
 from sub_scripts.xml_reader import code
 
+duration = int(input("How Long Would You Like It For Each Student (seconds):      "))
+
 # Function to generate random port number
 def generate_random_port():
     return random.randint(8000, 8080)
@@ -267,9 +269,40 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             const wordCount = words.length;  // Count the words
             document.getElementById('wordCount').textContent = `Word count: ${wordCount}`;  // Update word count display
         }
+        document.addEventListener("DOMContentLoaded", function() {
+
+    '''
+        html_code_2 = f'''
+    let startTime = Math.floor(Date.now() / 1000);  // Start time in seconds
+    let duration = {duration};  // Example duration, in seconds (you can update this with the correct value)
+    let submitBtn = document.getElementById('submitButton');
+
+    let endTime = startTime + duration;  // Calculate the end time
+    '''
+        html_code_3 = '''
+    function updateTimer() {
+        let currentTime = Math.floor(Date.now() / 1000);  // Current time in seconds
+        let remaining = endTime - currentTime;
+
+        if (remaining <= 0) {
+            document.getElementById('timer').textContent = "Session Over";
+            submitBtn.disabled = true;  // Disable button when session ends
+            alert("TIMES UP")
+            clearInterval(timerInterval);  // Stop the interval
+            return;
+        }'''
+        html_code_4 = '''
+        document.getElementById('timer').textContent = `Time left: ${remaining}s`;
+    }
+
+    // Initial update and set interval to update every second
+    updateTimer();
+    let timerInterval = setInterval(updateTimer, 1000);
+});
+
     </script>
         '''
-        html_code_2 = f'''
+        html_code_5 = f'''
 </head>
 <body>
     <h1>Ask a Question</h1>
@@ -296,15 +329,15 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
     <p id="wordCount">Word count: 0</p>
 
     <!-- U.S. Flag -->
-    <!-- <img id="usFlag" src="/assets/us_flag.png" alt="U.S. Flag"> -->
+    <img id="usFlag" src="/assets/us_flag.png" alt="U.S. Flag">
 
     <!-- Democracy Drive Img -->
-    <!-- <img id="dd" src="/assets/dd.png" alt="Democracy Drive"> -->
+    <img id="dd" src="/assets/dd.png" alt="Democracy Drive">
 </body>
 </html>
         '''
 
-        overall_html_code = html_code + html_code_2
+        overall_html_code = html_code + html_code_2 + html_code_3 + html_code_4 + html_code_5
 
         class normUserHTTP(BaseHTTPRequestHandler):
             def do_GET(self):
@@ -423,7 +456,7 @@ def update_timer(timer_duration, status_label, shutdown_event, ip_port_label):
         time.sleep(1)
         timer_duration -= 1
         # Update the GUI timer label
-        status_label.configure(text=f"Time remaining: {timer_duration} seconds")
+        status_label.configure(text=f"Time remaining: {timer_duration} seconds till server shuts down")
     
     if timer_duration <= 0:
         shutdown_event.set()  # Trigger shutdown when timer expires
@@ -492,6 +525,7 @@ def start_gui():
     user_response_textbox.pack(pady=5)
     submit_button = ctk.CTkButton(root, text="Submit", state=ctk.DISABLED)
     submit_button.pack(pady=10)
+    #print(int(student_timer_entry))
 
 
 
@@ -533,5 +567,3 @@ def start_gui():
 
 if __name__ == "__main__":
     start_gui()
-# I'm going to pause this project for a while and work on other things
-#test changes
