@@ -17,6 +17,7 @@ import datetime
 from urllib.parse import parse_qs
 from sub_scripts.DATA_DESTROYER import file
 from sub_scripts.xml_reader import code
+from sub_scripts.online_xml_reader import reading
 
 duration = int(input("How Long Would You Like It For Each Student (seconds):      "))
 
@@ -55,6 +56,8 @@ def open_destroy_window():
 def open_read_window():
     print("Testing Read Button")
     code()  # Call the file function to open the read window
+def open_online_read_window():
+    reading()
 
 def append_to_xml(new_data, xml_file):
             try:
@@ -264,6 +267,11 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             .catch(error => alert("Sorry something is not working"));
 
             event.preventDefault();  // Prevent the form from submitting the traditional way
+
+                // Disable the submit button when the form is submitted
+    document.getElementById("submitButton").disabled = true;
+    document.getElementById("submitButton").style.backgroundColor = "gray";
+    document.getElementById("submitButton").style.cursor = "not-allowed";
         }
 
         function autoResize() {
@@ -551,11 +559,15 @@ def start_gui():
 
     # Button to trigger the file function (which opens the destroy window)
     destroy_button = ctk.CTkButton(root, text="Open Destroy Window", command=lambda: open_destroy_window())
-    destroy_button.pack(pady=20)
+    destroy_button.pack(pady=10)
 
     # Button to trigger the file function (which opens the destroy window)
     read_button = ctk.CTkButton(root, text="Open Read Window", command=lambda: open_read_window())
-    read_button.pack(pady=20)
+    read_button.pack(pady=10)
+
+    # Button to trigger the file function (which opens the destroy window)
+    online_read_button = ctk.CTkButton(root, text="Open Online Xml Reader", command=lambda: open_online_read_window())
+    online_read_button.pack(pady=10)
 
     # Label to display server status
     status_label = ctk.CTkLabel(root, text="Server status: Not running", anchor="w", wraplength=350)
