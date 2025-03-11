@@ -19,7 +19,7 @@ from sub_scripts.DATA_DESTROYER import file
 from sub_scripts.xml_reader import code
 from sub_scripts.online_xml_reader import reading
 
-duration = int(input("How Long Would You Like It For Each Student (seconds):      "))
+
 
 # Function to generate random port number
 def generate_random_port():
@@ -49,6 +49,7 @@ def run_as_admin():
 # Call the function to ensure the script is running as an admin (only on Windows)
 run_as_admin()
 
+duration = int(input("How Long Would You Like It For Each Student (seconds):      "))
 
 def open_destroy_window():
     print("Testing Destory Button")
