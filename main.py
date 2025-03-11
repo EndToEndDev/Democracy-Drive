@@ -245,9 +245,20 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
         }
     </style>
     <script>
+        const blacklistedWords = ["fuck", "shit", "damn", "asshole", "bastard", "bitch", "god damn", "goddamn"];
+
         function storeInput(event) {
             let userInput = document.getElementById("userResponse").value;
             let userName = document.getElementById("userName").value;  // Get the user's name
+            
+            // Check for blacklisted words in the user response
+            for (let word of blacklistedWords) {
+                if (userInput.toLowerCase().includes(word)) {
+                    alert("Your response contains prohibited words. Please remove them.");
+                    document.getElementById("submitButton").disabled = false;  // Re-enable the button if the user corrects the input
+                    return;
+                }
+            }
 
             // Send the response and name to the server using fetch (AJAX POST request)
             fetch('/submit_answer', {
