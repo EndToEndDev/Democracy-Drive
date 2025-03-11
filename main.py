@@ -245,7 +245,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
         }
     </style>
     <script>
-        const blacklistedWords = ["fuck", "shit", "damn", "asshole", "bastard", "bitch", "god damn", "goddamn"];
+        const blacklistedWords = ["fuck", "shit", "damn", "asshole", "bastard", "bitch", "god damn", "goddamn", "skibidi", "sigma", "hoe"];
 
         function storeInput(event) {
             let userInput = document.getElementById("userResponse").value;
@@ -254,7 +254,7 @@ def start_server(question, port, host="192.168.1.80", stop_event=None, status_la
             // Check for blacklisted words in the user response
             for (let word of blacklistedWords) {
                 if (userInput.toLowerCase().includes(word)) {
-                    alert("Your response contains prohibited words. Please remove them.");
+                    alert("Your response contains prohibited words or brainrot (Our Teacher asked for this sorry). Please remove them.");
                     document.getElementById("submitButton").disabled = false;  // Re-enable the button if the user corrects the input
                     return;
                 }
